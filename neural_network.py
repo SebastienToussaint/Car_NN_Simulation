@@ -1,8 +1,12 @@
 from torch import nn
 import torch
 
-# Construct model
 class CarModel(nn.Module):
+    """
+    A simple neural network model used to drive a car, where the inputs
+    come from distance sensors mounted to the car that detect how close
+    objects are.
+    """
     def __init__(self, input_features, output_features, hidden_units):
         super().__init__()
         self.layer_stack = nn.Sequential(
@@ -13,6 +17,8 @@ class CarModel(nn.Module):
             nn.Linear(hidden_units, output_features)
         )
 
+        # Used to keep track of each generations
+        # score throughout training
         self.historical_scores = []
 
     def forward(self, x):
@@ -20,13 +26,20 @@ class CarModel(nn.Module):
 
 
     def get_answer(self, inputs):
+        """
+        Retrieves the output of the model
+        given a certain input
+        """
+        # Convert inputs to tensors
         x = torch.tensor(inputs, dtype=torch.float32).unsqueeze(dim=0)
 
-        self.eval()
+        # Make prediction
+        self.eval() # Remove this and just set model to eval at start of simulation?
         with torch.inference_mode():
             logits = self(x)
             prediction = torch.argmax(torch.softmax(logits, dim=1), dim=1)
 
+        # Translate prediction
         if prediction == 0:
             return "left"
         elif prediction == 1:
@@ -36,6 +49,19 @@ class CarModel(nn.Module):
 
 
     def downsize_scores(self, points_to_keep, mode = "even"):
+        """
+        Used to reduce the number of historical scores kept,
+        otherwise over many generations the length of the list
+        gets too big and causes issues.
+        3 modes of operation: even, latest, biased are
+        used to determine which scores are kept.
+
+        Even = An even distribution of all the scores are kept
+        Latest = Only the latest points_to_keep scores are kept
+        Biased = Half of points_to_keep of the latest scores are kept, and the
+        remaining half of points_to_keep comes from an even distribution
+        of the remaining scores.
+        """
         new_scores = []
         match mode:
             case "even":
