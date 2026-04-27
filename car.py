@@ -33,23 +33,23 @@ class Car:
         self.root = root
 
         # Distance sensor initialization
-        self.sensors = [DistanceSensor(obstacles, 400, self.position, -45, self.root),
-                        DistanceSensor(obstacles, 400, self.position, -30, self.root),
-                        DistanceSensor(obstacles, 400, self.position, -15, self.root),
-                        DistanceSensor(obstacles, 400, self.position, 0, self.root),
-                        DistanceSensor(obstacles, 400, self.position, 15, self.root),
-                        DistanceSensor(obstacles, 400, self.position, 30, self.root),
-                        DistanceSensor(obstacles, 400, self.position, 45, self.root),
-                        DistanceSensor(obstacles, 400, self.position, -60, self.root),
-                        DistanceSensor(obstacles, 400, self.position, -75, self.root),
+        self.sensors = [DistanceSensor(obstacles, 350, self.position, -45, self.root),
+                        DistanceSensor(obstacles, 350, self.position, -30, self.root),
+                        DistanceSensor(obstacles, 350, self.position, -15, self.root),
+                        DistanceSensor(obstacles, 350, self.position, 0, self.root),
+                        DistanceSensor(obstacles, 350, self.position, 15, self.root),
+                        DistanceSensor(obstacles, 350, self.position, 30, self.root),
+                        DistanceSensor(obstacles, 350, self.position, 45, self.root),
+                        DistanceSensor(obstacles, 350, self.position, -60, self.root),
+                        DistanceSensor(obstacles, 350, self.position, -75, self.root),
 
-                        DistanceSensor(obstacles, 400, self.position, 60, self.root),
-                        DistanceSensor(obstacles, 400, self.position, 75, self.root),
+                        DistanceSensor(obstacles, 350, self.position, 60, self.root),
+                        DistanceSensor(obstacles, 350, self.position, 75, self.root),
 
-                        DistanceSensor(obstacles, 400, self.position, -8, self.root),
-                        DistanceSensor(obstacles, 400, self.position, -4, self.root),
-                        DistanceSensor(obstacles, 400, self.position, 4, self.root),
-                        DistanceSensor(obstacles, 400, self.position, 8, self.root)
+                        DistanceSensor(obstacles, 350, self.position, -8, self.root),
+                        DistanceSensor(obstacles, 350, self.position, -4, self.root),
+                        DistanceSensor(obstacles, 350, self.position, 4, self.root),
+                        DistanceSensor(obstacles, 350, self.position, 8, self.root)
                         ]
 
         # Data gathering variables

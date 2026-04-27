@@ -1,6 +1,4 @@
 import os.path
-import sys
-import utilities
 from car import Car
 import pygame
 import pickle
