@@ -3,8 +3,6 @@ import os.path
 import pickle
 
 import pygame
-import torch
-
 from sensors import DistanceSensor
 from utilities import SaveDataStructure
 

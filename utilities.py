@@ -1,4 +1,7 @@
 import pickle
+import subprocess
+import os
+import sys
 
 class SaveDataStructure:
     """
@@ -15,8 +18,6 @@ class SaveDataStructure:
         """
         with open(filename, "wb") as file:
             pickle.dump(self, file)
-
-
 
 def process_data(filename, buffer):
     """
@@ -87,6 +88,3 @@ def process_data(filename, buffer):
 
     print(f"Reduced data down from {initial_length} entries to {len(inputs)}")
     return inputs, answers
-
-
-

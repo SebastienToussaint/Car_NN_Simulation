@@ -1,0 +1,5 @@
+torch
+torchmetrics
+matplotlib
+pygame
+scikit-learn
