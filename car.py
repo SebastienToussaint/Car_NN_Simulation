@@ -3,6 +3,8 @@ import os.path
 import pickle
 
 import pygame
+from sympy.physics.quantum.gate import normalized
+
 from sensors import DistanceSensor
 from utilities import SaveDataStructure
 
@@ -27,38 +29,36 @@ class Car:
         self.TURN_RATE = 4
 
         # Pygame visual variables
-        self.image = pygame.transform.scale(pygame.image.load("Data/Graphics/car.png").convert_alpha(), [10, 20])
+        self.image = pygame.transform.scale(pygame.image.load("Data/Graphics/car.png").convert_alpha(), [21, 40])
         self.display_image = self.image
         self.rect = self.image.get_rect(center=self.position.copy())
         self.root = root
 
         # Distance sensor initialization
-        self.sensors = [DistanceSensor(obstacles, 350, self.position, -45, self.root),
-                        DistanceSensor(obstacles, 350, self.position, -30, self.root),
-                        DistanceSensor(obstacles, 350, self.position, -15, self.root),
-                        DistanceSensor(obstacles, 350, self.position, 0, self.root),
-                        DistanceSensor(obstacles, 350, self.position, 15, self.root),
-                        DistanceSensor(obstacles, 350, self.position, 30, self.root),
-                        DistanceSensor(obstacles, 350, self.position, 45, self.root),
-                        DistanceSensor(obstacles, 350, self.position, -60, self.root),
-                        DistanceSensor(obstacles, 350, self.position, -75, self.root),
+        self.sensors = [DistanceSensor(obstacles, 400, self.position, -90, self.root),
+                        DistanceSensor(obstacles, 400, self.position, -75, self.root),
+                        DistanceSensor(obstacles, 400, self.position, -60, self.root),
+                        DistanceSensor(obstacles, 400, self.position, -45, self.root),
+                        DistanceSensor(obstacles, 400, self.position, -30, self.root),
+                        DistanceSensor(obstacles, 400, self.position, -15, self.root),
+                        DistanceSensor(obstacles, 400, self.position, 0, self.root),
+                        DistanceSensor(obstacles, 400, self.position, 15, self.root),
+                        DistanceSensor(obstacles, 400, self.position, 30, self.root),
+                        DistanceSensor(obstacles, 400, self.position, 45, self.root),
+                        DistanceSensor(obstacles, 400, self.position, 60, self.root),
+                        DistanceSensor(obstacles, 400, self.position, 75, self.root),
+                        DistanceSensor(obstacles, 400, self.position, 90, self.root)
 
-                        DistanceSensor(obstacles, 350, self.position, 60, self.root),
-                        DistanceSensor(obstacles, 350, self.position, 75, self.root),
 
-                        DistanceSensor(obstacles, 350, self.position, -8, self.root),
-                        DistanceSensor(obstacles, 350, self.position, -4, self.root),
-                        DistanceSensor(obstacles, 350, self.position, 4, self.root),
-                        DistanceSensor(obstacles, 350, self.position, 8, self.root)
                         ]
 
         # Data gathering variables
         self.distances = []
         self.key_presses = []
 
-        if os.path.exists("saved_data.pkl"):
+        if os.path.exists("Data/SaveFiles/saved_data.pkl"):
             print("Loading saved data file...")
-            with open("saved_data.pkl", "rb") as file:
+            with open("Data/SaveFiles/saved_data.pkl", "rb") as file:
                 self.save_file = pickle.load(file)
         else:
             print("Creating new data file...")
@@ -145,7 +145,7 @@ class Car:
         self.root.blit(self.display_image, self.rect)
 
 
-    def data_run(self):
+    def data_run(self, draw_lasers = True):
         """
         Call all the update functions and functions
         needed for data gathering runs.
@@ -158,7 +158,7 @@ class Car:
         distances = []
         directions = self.get_directions()
         for s in self.sensors:
-            distances.append(s.simulate(self.direction))
+            distances.append(s.simulate(self.direction, draw_lasers))
 
         if directions["record"] and directions["forward"]:
             print("Recording inputs")
@@ -167,7 +167,7 @@ class Car:
 
         self.display()
 
-    def neural_run(self, model):
+    def neural_run(self, model, draw_lasers = True):
         """
         Call all the update functions and functions
         needed for neural network driving runs
@@ -175,7 +175,8 @@ class Car:
         # Get the distances from the sensors and calculate answer
         distances = []
         for s in self.sensors:
-            distances.append(s.simulate(self.direction))
+            distances.append(s.simulate(self.direction, draw_lasers))
+
 
         answer = model.get_answer(distances)
         print(answer)

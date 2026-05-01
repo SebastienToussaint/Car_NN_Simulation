@@ -17,8 +17,8 @@ car = Car(root, [track])
 
 # Setup model if it exists
 model = None
-if os.path.exists("saved_model.pkl"):
-    with open("saved_model.pkl", "rb") as file:
+if os.path.exists("Data/SaveFiles/saved_model.pkl"):
+    with open("Data/SaveFiles/saved_model.pkl", "rb") as file:
         model = pickle.load(file)
 
 # Single update loop
@@ -38,11 +38,11 @@ while run_simulation:
      # EVENT LOOP
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            car.save_file.write_to_file("saved_data.pkl")
+            car.save_file.write_to_file("Data/SaveFiles/saved_data.pkl")
             run_simulation = False
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
-                car.save_file.write_to_file("saved_data.pkl")
+                car.save_file.write_to_file("Data/SaveFiles/saved_data.pkl")
                 run_simulation = False
 
 

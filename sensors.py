@@ -73,15 +73,16 @@ class DistanceSensor:
     #
     #     return 1
 
-    def simulate(self, car_direction):
+    def simulate(self, car_direction, draw=True):
         """
         Fires the laser, checks for object collision,
         draws the laser, and returns it calculated
         distance to object.
         """
         x, y, distance = self.get_distance(car_direction)
-        pygame.draw.line(self.root, "green", self.position, [x, y])
-        pygame.draw.circle(self.root, "red", [x,y], 2)
+        if draw:
+            pygame.draw.line(self.root, "green", self.position, [x, y])
+            pygame.draw.circle(self.root, "red", [x,y], 2)
 
         return distance
 

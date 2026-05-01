@@ -12,7 +12,7 @@ import utilities
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
 # Process and retrieve data
-inputs, answers = utilities.process_data("saved_data.pkl", 5)
+inputs, answers = utilities.process_data("Data/SaveFiles/saved_data.pkl", 20, 10)
 
 # Convert to tensors
 inputs = torch.tensor(inputs, dtype=torch.float32)
@@ -28,17 +28,19 @@ train_inputs, test_inputs, train_answers, test_answers = train_test_split(
 
 # Load the model if a saved one exists,
 # otherwise create a new one
-if os.path.exists("saved_model.pkl"):
-    with open("saved_model.pkl", "rb") as model_file:
+if os.path.exists("Data/SaveFiles/saved_model.pkl"):
+    with open("Data/SaveFiles/saved_model.pkl", "rb") as model_file:
         print("Loading saved model...")
         my_model = pickle.load(model_file)
         my_model.to(device)
 else:
     print("Creating new model...")
-    my_model = neural_network.CarModel(15, 3, 64)
+    my_model = neural_network.CarModel(13, 3, 64)
 
 # Loss function, optimizer and accuracy function
-loss_fn = nn.CrossEntropyLoss()
+
+class_weights = torch.Tensor([4.0, 1.0, 4.0])
+loss_fn = nn.CrossEntropyLoss(weight=class_weights)
 optimizer = torch.optim.Adam(my_model.parameters(),
                             lr=0.001)
 acc_fn = Accuracy("multiclass",
@@ -103,7 +105,7 @@ for epoch in range(epochs):
 
 # Save model
 print("Saving model...")
-with open("saved_model.pkl", "wb") as file:
+with open("Data/SaveFiles/saved_model.pkl", "wb") as file:
     pickle.dump(my_model, file)
 
 

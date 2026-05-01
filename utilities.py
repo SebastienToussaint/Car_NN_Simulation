@@ -19,7 +19,7 @@ class SaveDataStructure:
         with open(filename, "wb") as file:
             pickle.dump(self, file)
 
-def process_data(filename, buffer):
+def process_data(filename, straight_buffer, smoothing_buffer):
     """
     A function used to process and reduce noise in the data.
     Goes through the given .pkl data file, extracts the inputs
@@ -54,37 +54,52 @@ def process_data(filename, buffer):
         else:
             answers.append(1)
 
+    # Removal of short straight blocks
     i = 0
-    while i < len(answers) - buffer:
+    counter = 0
+    start_of_straight_block = 0
+    while i < len(answers):
+        # If turning
+        if answers[i] != 1:
+            # Delete the straight block if the inputs
+            # haven`t been going straight for long enough
+            if 0 < counter < straight_buffer:
+                del answers[start_of_straight_block:i]
+                del inputs[start_of_straight_block:i]
+                i = start_of_straight_block
+            counter = 0
+        else:
+            # Increase the length of the block by 1
+            # and set start position if needed
+            if counter == 0:
+                start_of_straight_block = i
+
+            counter += 1
+        i += 1
+
+    # Smoothing of data
+    i = 0
+    while i < len(answers) - smoothing_buffer:
         # If more than one unique value in the sublist
-        if len(set(answers[i:i+buffer])) > 1:
+        if len(set(answers[i:i + smoothing_buffer])) > 1:
 
             lower = i
-            upper = i + buffer
+            upper = i + smoothing_buffer
             if i > 0:
                 # Check if beginning of sublist is part of the previous sequence
-                while answers[lower] == answers[i-1]:
-
+                while answers[lower] == answers[i - 1]:
                     lower += 1
 
-            if i + buffer + 1 < len(answers):
+            if i + smoothing_buffer + 1 < len(answers):
                 # Check if end of sublist is part of the next sequence
-                while answers[upper] == answers[i +buffer + 1]:
-
+                while answers[upper] == answers[i + smoothing_buffer + 1]:
                     upper -= 1
 
-            del answers[lower:upper+1]
-            del inputs[lower:upper+1]
+            del answers[lower:upper + 1]
+            del inputs[lower:upper + 1]
             i = lower
         else:
-            i += buffer
-
-    while i < len(answers):
-        for j, dist in enumerate(inputs[i]):
-            if dist <= 40:
-                inputs[i][j] = 40
-
-        i += 1
+            i += smoothing_buffer
 
     print(f"Reduced data down from {initial_length} entries to {len(inputs)}")
     return inputs, answers
