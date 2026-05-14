@@ -7,6 +7,27 @@ from torchmetrics import Accuracy
 import neural_network
 import matplotlib.pyplot as plt
 import utilities
+import sys
+
+
+
+# Parameter management
+match len(sys.argv):
+    case 1:
+        epochs = 3000
+        learning_rate = 0.001
+        print(f"Using defaults: number of generations = {epochs} and initial learning rate = {learning_rate}")
+
+    case 2:
+        epochs = int(float(sys.argv[1]))  # In case user types in float value for epochs, prevents crashing
+        learning_rate = 0.001
+        print(f"Running simulation with number of generations = {epochs} and initial learning rate = {learning_rate}")
+
+    case 3:
+        epochs = int(float(sys.argv[1]))
+        learning_rate = float(sys.argv[2])
+        print(f"Running simulation with number of generations = {epochs} and initial learning rate = {learning_rate}")
+
 
 # Device agnostics
 device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -62,7 +83,7 @@ train_loss_list = []
 test_loss_list = []
 
 # Training loop
-epochs = 3000
+
 for epoch in range(epochs):
     my_model.train()
 
