@@ -13,5 +13,7 @@ Technical Details:
 - Optimizer : Adam
 - Loss function : Cross Entropy Loss
 - Model size : 13 -> 64 -> 3 (with ReLU layers between each)
-- Output weighting : [4, 0, 4]
+- Output weighting : [4, 1, 4]
+
+Installation Instructions:
 
